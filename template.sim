@@ -1,0 +1,38 @@
+SET g
+SET em
+
+ADD MBALL
+x y z r
+m
+trace
+END
+
+ADD QBALL
+x y z r
+q
+trace
+END
+
+ADD MQBALL
+x y z r
+m q
+trace
+END
+
+ADD MPT
+x y z
+m
+trace
+END
+
+ADD QPT
+x y z
+q
+trace
+END
+
+ADD MQPT
+x y z
+m q
+trace
+END
