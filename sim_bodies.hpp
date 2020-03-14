@@ -29,6 +29,8 @@ class sim_body{
     float r=0;
     float mass=0,charge =0;
     bool trace = false;
+    bool exempt =false;
+    int count =0;
     body_type type;
 
     void draw(){};
