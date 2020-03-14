@@ -1,5 +1,6 @@
 #include<string>
 #include<vector>
+#include<set>
 
 #define FINENESS 0.001
 
@@ -60,4 +61,8 @@ class Point:public sim_body{
     void draw();
     void update(const std::vector<sim_body>&,const config&);
 };
+
+void add_exemption(const sim_body& b1,const sim_body& b2);
+void remove_exemption(const sim_body& b1,const sim_body& b2);
+bool is_exempted(const sim_body& b1,const sim_body& b2);
 #endif
