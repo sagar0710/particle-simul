@@ -15,7 +15,9 @@ struct config{
     bool g = false;
     bool G = false;
     bool em = false;
-    float time_slice = 0.001;
+    float time_slice = 0;
+    int delay =0;
+    int counter =0;
 };
 
 class sim_body{

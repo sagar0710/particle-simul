@@ -2,6 +2,7 @@
 #include<iostream>
 #include<math.h>
 #include<set>
+#include<chrono>
 #include "./sim_bodies.hpp"
 
 int sim_body::num = 1;
@@ -10,7 +11,15 @@ int sim_body::num = 1;
 #define ERR_MARGIN 0.001
 #define G_CONST 6.67e-11
 #define E_CONST 8.99e9
+
+#define APPR(val) ((int)(val)*1000)/(float)1000;
+
 std::set<std::set<int>> exemptions;
+
+inline uint64_t get_time(){
+    return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+}
+
 void add_exemption(const sim_body& b1,const sim_body& b2){
     std::set<int> l = {b1.ID,b2.ID};
     exemptions.insert(l);
@@ -52,9 +61,11 @@ void sim_body::calc_force(const std::vector<sim_body>& objs,const config& global
             continue;
         }
         if(is_exempted(*this,obj)){
-         
-            continue;
-         
+            if(r<=this->r+obj.r){
+                continue;
+            }else{
+                remove_exemption(*this,obj);
+            }
         }
         if(global.G){
 
@@ -77,8 +88,8 @@ void sim_body::calc_force(const std::vector<sim_body>& objs,const config& global
 
             float theta = abs(atan(dy/dx));
             if(isnan(theta))theta = 0;
-            ax += sign(dx)*f*cos(theta)/(this->charge*this->mass);
-            ay += sign(dy)*f*sin(theta)/(this->charge*this->mass);
+            ax += APPR(sign(dx)*f*cos(theta)/(this->charge*this->mass));
+            ay += APPR(sign(dy)*f*sin(theta)/(this->charge*this->mass));
 
         }
     }
@@ -86,18 +97,25 @@ void sim_body::calc_force(const std::vector<sim_body>& objs,const config& global
 
 void Sphere::update(const std::vector<sim_body>&objs,const config& global){
 
+    static uint64_t time = get_time();
+    static float dt = global.time_slice;
+    if(global.time_slice == 0){
+        uint64_t t = get_time();
+        dt = ((float)(t - time+1))/1000;
+        time = t;
+    }
+
     //* NOTE : Will need to be changed if 3D is implemented
     if(this->trace)
         trace_history.push_back(std::pair<float,float>(xc,yc));
     
-    xc += vx*global.time_slice + 0.5*ax*(global.time_slice*global.time_slice);
-    yc += vy*global.time_slice + 0.5*ay*(global.time_slice*global.time_slice);
-    zc += vz*global.time_slice + 0.5*az*(global.time_slice*global.time_slice);
     
-    
-    vx += ax*global.time_slice;
-    vy += ay*global.time_slice;
-    vz += az*global.time_slice;    
+    xc += vx*dt + 0.5*ax*(dt*dt);
+    yc += vy*dt + 0.5*ay*(dt*dt);
+    zc += vz*dt + 0.5*az*(dt*dt);    
+    vx += ax*dt;
+    vy += ay*dt;
+    vz += az*dt;
 
 
 }
