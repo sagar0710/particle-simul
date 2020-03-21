@@ -1,6 +1,6 @@
 #include "physics.hpp"
 #define SQR(x) ((x)*(x))
-void collision(std::vector<sim_body>& sim_objs){
+void collision(std::vector<Sim_Body>& sim_objs){
     for(auto& body1:sim_objs){   
         for(auto& body2:sim_objs){
             float dx = body2.xc-body1.xc;
@@ -59,13 +59,13 @@ void collision(std::vector<sim_body>& sim_objs){
     }
 }
 
-void calc_forces(std::vector<sim_body>& sim_objs,config& global_config){
+void calc_forces(std::vector<Sim_Body>& sim_objs,config& global_config){
     for(auto& body:sim_objs){
         body.calc_force(sim_objs,global_config);
     }
 }
 
-void update(std::vector<sim_body>& sim_objs,config& global_config){
+void update(std::vector<Sim_Body>& sim_objs,config& global_config){
     Sphere *stemp;
     Point *ptemp;
     for(auto& body:sim_objs){

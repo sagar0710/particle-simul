@@ -1,6 +1,7 @@
 #include<string>
 #include<vector>
 #include<set>
+#include "./util.hpp"
 
 #define FINENESS 0.001
 
@@ -9,7 +10,8 @@
 
 enum body_type{
     SPHERE,
-    POINT
+    POINT,
+    STAT_RECT
 };
 struct config{
     bool g = false;
@@ -20,7 +22,7 @@ struct config{
     int counter =0;
 };
 
-class sim_body{
+class Sim_Body{
 
     public:
     int ID;
@@ -31,17 +33,20 @@ class sim_body{
     float ax=0,ay=0,az=0;
     float r=0;
     float mass=0,charge =0;
+    float rot;
+    float width,height;
+    float xtl,ytl,xtr,ytr,xbl,ybl,xbr,ybr;
     bool trace = false;
     bool exempt =false;
     int count =0;
     body_type type;
 
     void draw(){};
-    virtual void calc_force(const std::vector<sim_body>& bodies,const config& gloabl);
-    void update(const std::vector<sim_body>&,const config&){};
+    virtual void calc_force(const std::vector<Sim_Body>& bodies,const config& gloabl);
+    void update(const std::vector<Sim_Body>&,const config&){};
 };
 
-class Sphere:public sim_body{
+class Sphere:public Sim_Body{
     
     public:
     Sphere(){
@@ -49,11 +54,11 @@ class Sphere:public sim_body{
         ++num;
     }
     void draw();
-    void update(const std::vector<sim_body>&,const config&);
+    void update(const std::vector<Sim_Body>&,const config&);
 
 };
 
-class Point:public sim_body{
+class Point:public Sim_Body{
 
     public:
     Point(){
@@ -61,10 +66,29 @@ class Point:public sim_body{
         ++num;
     }
     void draw();
-    void update(const std::vector<sim_body>&,const config&);
+    void update(const std::vector<Sim_Body>&,const config&);
 };
 
-void add_exemption(const sim_body& b1,const sim_body& b2);
-void remove_exemption(const sim_body& b1,const sim_body& b2);
-bool is_exempted(const sim_body& b1,const sim_body& b2);
+//* Will need to change if 3D
+class Static_Rect:public Sim_Body{
+
+    public:
+    Static_Rect(float x,float y,float h,float w,float rot){
+        ID = num;
+        ++num;
+        xc = x;
+        yc =y;
+        height = h;
+        width = w;
+        this->rot = rot;
+        set_draw_coordinates();
+    }
+    void set_draw_coordinates();
+    void draw();
+    void update(const std::vector<Sim_Body>&,const config&);
+};
+
+void add_exemption(const Sim_Body& b1,const Sim_Body& b2);
+void remove_exemption(const Sim_Body& b1,const Sim_Body& b2);
+bool is_exempted(const Sim_Body& b1,const Sim_Body& b2);
 #endif

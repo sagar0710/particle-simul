@@ -12,7 +12,7 @@
 #define Y_HEIGHT 420
 
 std::vector<std::string> tokens;
-std::vector<sim_body> sim_objs;
+std::vector<Sim_Body> sim_objs;
 config global_config;
 
 void init(void){ 
@@ -36,7 +36,7 @@ void draw_scene(void){
 
     Sphere *stemp;
     Point *ptemp;
-
+    Static_Rect *srttemp;
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT); 
 
      glBegin(GL_LINES);
@@ -59,9 +59,12 @@ void draw_scene(void){
         if(body.type==SPHERE){
             stemp = static_cast<Sphere*>(&body);
             stemp->draw();
-        }else{
+        }else if(body.type == POINT){
             ptemp = static_cast<Point*>(&body);
             ptemp->draw();
+        }else if(body.type == STAT_RECT){
+            srttemp = static_cast<Static_Rect*>(&body);
+            srttemp->draw();
         }
     }
     glFlush(); 

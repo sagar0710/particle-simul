@@ -5,7 +5,8 @@
 #include<chrono>
 #include "./sim_bodies.hpp"
 
-int sim_body::num = 1;
+
+int Sim_Body::num = 1;
 
 #define SIGN(x) ((x)/abs(x))
 #define ERR_MARGIN 0.001
@@ -20,17 +21,17 @@ inline uint64_t get_time(){
     return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
 }
 
-void add_exemption(const sim_body& b1,const sim_body& b2){
+void add_exemption(const Sim_Body& b1,const Sim_Body& b2){
     std::set<int> l = {b1.ID,b2.ID};
     exemptions.insert(l);
 }
 
-void remove_exemption(const sim_body& b1,const sim_body& b2){
+void remove_exemption(const Sim_Body& b1,const Sim_Body& b2){
     std::set<int> l = {b1.ID,b2.ID};
     exemptions.erase(l);
 }
 
-bool is_exempted(const sim_body& b1,const sim_body& b2){
+bool is_exempted(const Sim_Body& b1,const Sim_Body& b2){
     std::set<int> l = {b1.ID,b2.ID};
     return exemptions.count(l) == 1;
 }
@@ -42,7 +43,7 @@ int sign(float val){
 }
 
 
-void sim_body::calc_force(const std::vector<sim_body>& objs,const config& global){
+void Sim_Body::calc_force(const std::vector<Sim_Body>& objs,const config& global){
 
     //* NOTE : Will need to be changed if 3D is implemented
     this->ax =0;
@@ -95,7 +96,7 @@ void sim_body::calc_force(const std::vector<sim_body>& objs,const config& global
     }
 }
 
-void Sphere::update(const std::vector<sim_body>&objs,const config& global){
+void Sphere::update(const std::vector<Sim_Body>&objs,const config& global){
 
     static uint64_t time = get_time();
     static float dt = global.time_slice;
@@ -143,7 +144,7 @@ void Sphere::draw(){
 
 }
 
-void Point::update(const std::vector<sim_body>&objs,const config& global){
+void Point::update(const std::vector<Sim_Body>&objs,const config& global){
     //* NOTE : Will need to be changed if 3D is implemented
     if(this->trace)
         trace_history.push_back(std::pair<float,float>(xc,yc));
@@ -177,3 +178,59 @@ void Point::draw(){
 
 }
 
+/** 
+ * Helper funtion, so we'll have to calculate co-ordinates only once
+*/
+void Static_Rect::set_draw_coordinates(){
+    //* Temporary
+    float tx,ty;
+    std::pair<float,float> tp;
+    /** 
+     * Here we calculate the tx and ty assuming rectagle is at (0,0) in unrotated frame
+     * Then we use fun get_point_in_original() to get the co-ordinates in actual frame.
+    */
+
+    //* Top Right
+    tx = width/2;
+    ty = height/2;
+    tp = get_point_in_original(xc,yc,rot,tx,ty);
+    xtr = tp.first;
+    ytr = tp.second;
+
+    //* Top Left
+    tx = -width/2;
+    ty = height/2;
+    tp = get_point_in_original(xc,yc,rot,tx,ty);
+    xtl = tp.first;
+    ytl = tp.second;
+
+    //* Bottem Right
+    tx = width/2;
+    ty = -height/2;
+    tp = get_point_in_original(xc,yc,rot,tx,ty);
+    xbr = tp.first;
+    ybr = tp.second;
+    
+    //* Bottem Left
+    tx = -width/2;
+    ty = -height/2;
+    tp = get_point_in_original(xc,yc,rot,tx,ty);
+    xbl = tp.first;
+    ybl = tp.second;
+}
+
+void Static_Rect::draw(){
+
+    //* As static, No trace
+    glBegin(GL_POLYGON);
+    glVertex2f(xtl,ytl);
+    glVertex2f(xtr,ytr);
+    glVertex2f(xbr,ybr);
+    glVertex2f(xbl,ybl);
+    glEnd();   
+
+}
+
+void Static_Rect::update(const std::vector<Sim_Body>&objs,const config& global){
+    //* Nothing Here
+}

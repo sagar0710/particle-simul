@@ -12,7 +12,7 @@ int main(){
                                     "ADD","MPT","2","3","0","5","8","9","5","TRACE","ENDBODY" \
                                     };
 
-    std::vector<sim_body> vec;
+    std::vector<Sim_Body> vec;
 
     generate_sim_bodies(tok,vec);
     int i = 1;

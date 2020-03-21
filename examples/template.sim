@@ -5,34 +5,40 @@ ADD MBALL
 x y z r
 m
 trace
-END
+ENDBODY
 
 ADD QBALL
 x y z r
 q
 trace
-END
+ENDBODY
 
 ADD MQBALL
 x y z r
 m q
 trace
-END
+ENDBODY
 
 ADD MPT
 x y z
 m
 trace
-END
+ENDBODY
 
 ADD QPT
 x y z
 q
 trace
-END
+ENDBODY
 
 ADD MQPT
 x y z
 m q
 trace
-END
+ENDBODY
+
+ADD ST_RECT
+x y z
+height width
+m rot(degree)
+ENDBODY

@@ -1,6 +1,7 @@
 #include<cstring>
 #include<vector>
 #include<iostream>
+#include<math.h>
 #include "./sim_bodies_generator.hpp"
 
 config generate_config(const std::vector<std::string>& tokens){
@@ -36,7 +37,7 @@ config generate_config(const std::vector<std::string>& tokens){
     }
     return ret;
 }
-void generate_sim_bodies(const std::vector<std::string>& tokens,std::vector<sim_body>& bodies){
+void generate_sim_bodies(const std::vector<std::string>& tokens,std::vector<Sim_Body>& bodies){
 
     auto itr = tokens.begin();
     while(itr != tokens.end()){
@@ -72,13 +73,19 @@ void generate_sim_bodies(const std::vector<std::string>& tokens,std::vector<sim_
             add_mpt(itr,bodies);
         }else if(strcmp((*itr).c_str(),"MQPT") == 0 || strcmp((*itr).c_str(),"mqpt") == 0){
             add_mqpt(itr,bodies);
+        }else if(strcmp((*itr).c_str(),"ST_RECT") == 0 || strcmp((*itr).c_str(),"st_rect") == 0){
+
+            add_st_rect(itr,bodies);
+        }else{
+            std::cerr<<"Error : Invalid Token Found : "<<*itr<<"\nExiting..."<<std::endl;
+            exit(1);
         }
         
 
     }
 }
 
-void read_and_set_centre(std::vector<std::string>::const_iterator& itr,sim_body& s){
+void read_and_set_centre_vel(std::vector<std::string>::const_iterator& itr,Sim_Body& s){
     ++itr;
     s.xc = atof((*itr).c_str());
     ++itr;
@@ -93,11 +100,11 @@ void read_and_set_centre(std::vector<std::string>::const_iterator& itr,sim_body&
     s.vz = atof((*itr).c_str());
 }
 
-void add_mball(std::vector<std::string>::const_iterator& itr,std::vector<sim_body>& bodies){
+void add_mball(std::vector<std::string>::const_iterator& itr,std::vector<Sim_Body>& bodies){
 
     Sphere s;
     s.type = SPHERE;
-    read_and_set_centre(itr,s);
+    read_and_set_centre_vel(itr,s);
     ++itr;
     s.r = atof((*itr).c_str());
     ++itr;
@@ -115,11 +122,11 @@ void add_mball(std::vector<std::string>::const_iterator& itr,std::vector<sim_bod
     return;
 }
 
-void add_qball(std::vector<std::string>::const_iterator& itr,std::vector<sim_body>& bodies){
+void add_qball(std::vector<std::string>::const_iterator& itr,std::vector<Sim_Body>& bodies){
 
     Sphere s;
     s.type = SPHERE;
-    read_and_set_centre(itr,s);
+    read_and_set_centre_vel(itr,s);
     ++itr;
     s.r = atof((*itr).c_str());
     ++itr;
@@ -138,11 +145,11 @@ void add_qball(std::vector<std::string>::const_iterator& itr,std::vector<sim_bod
 
 }
 
-void add_mqball(std::vector<std::string>::const_iterator& itr,std::vector<sim_body>& bodies){
+void add_mqball(std::vector<std::string>::const_iterator& itr,std::vector<Sim_Body>& bodies){
 
     Sphere s;
     s.type = SPHERE;
-    read_and_set_centre(itr,s);
+    read_and_set_centre_vel(itr,s);
     ++itr;
     s.r = atof((*itr).c_str());
     ++itr;
@@ -163,11 +170,11 @@ void add_mqball(std::vector<std::string>::const_iterator& itr,std::vector<sim_bo
 
 }
 
-void add_mpt(std::vector<std::string>::const_iterator& itr,std::vector<sim_body>& bodies){
+void add_mpt(std::vector<std::string>::const_iterator& itr,std::vector<Sim_Body>& bodies){
 
     Point p;
     p.type = POINT;
-    read_and_set_centre(itr,p);
+    read_and_set_centre_vel(itr,p);
     ++itr;
     p.mass = atof((*itr).c_str());
     ++itr;
@@ -185,11 +192,11 @@ void add_mpt(std::vector<std::string>::const_iterator& itr,std::vector<sim_body>
 
 }
 
-void add_qpt(std::vector<std::string>::const_iterator& itr,std::vector<sim_body>& bodies){
+void add_qpt(std::vector<std::string>::const_iterator& itr,std::vector<Sim_Body>& bodies){
 
     Point p;
     p.type = POINT;
-    read_and_set_centre(itr,p);
+    read_and_set_centre_vel(itr,p);
     ++itr;
     p.mass = atof((*itr).c_str());
     ++itr;
@@ -206,11 +213,11 @@ void add_qpt(std::vector<std::string>::const_iterator& itr,std::vector<sim_body>
 
 }
 
-void add_mqpt(std::vector<std::string>::const_iterator& itr,std::vector<sim_body>& bodies){
+void add_mqpt(std::vector<std::string>::const_iterator& itr,std::vector<Sim_Body>& bodies){
 
     Point p;
     p.type = POINT;
-    read_and_set_centre(itr,p);
+    read_and_set_centre_vel(itr,p);
     ++itr;
     p.mass = atof((*itr).c_str());
     ++itr;
@@ -226,5 +233,41 @@ void add_mqpt(std::vector<std::string>::const_iterator& itr,std::vector<sim_body
     }
     bodies.push_back(p);
     return;
+
+}
+
+void add_st_rect(std::vector<std::string>::const_iterator& itr,std::vector<Sim_Body>& bodies){
+
+    
+    ++itr;
+    float xc = atof((*itr).c_str());
+    ++itr;
+    float yc = atof((*itr).c_str());
+    ++itr;
+    float zc = atof((*itr).c_str());
+    ++itr;
+    float height = atof((*itr).c_str());
+    ++itr;
+    float width = atof((*itr).c_str());
+
+    ++itr;
+    float mass = atof((*itr).c_str());
+    ++itr;
+    float rot = atof((*itr).c_str());\
+    //* -ve sign is for anti-clockwise Adjustment
+    rot = -rot*M_PI/180;
+
+    Static_Rect srect(xc,yc,height,width,rot);
+    srect.type = STAT_RECT;
+    srect.mass = mass;
+    ++itr;
+    if(strcmp((*itr).c_str(),"ENDBODY") != 0 && strcmp((*itr).c_str(),"endbody") != 0){
+        std::cerr<<"Error : Invalid Token Found : "<<*itr<<"\nExiting..."<<std::endl;
+        exit(1);
+    }
+    
+    bodies.push_back(srect);
+    return;
+
 
 }
