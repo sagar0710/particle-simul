@@ -1,7 +1,12 @@
 #include "physics.hpp"
 #define SQR(x) ((x)*(x))
+#define COEFF_REST 1
+
 void collision(std::vector<Sim_Body>& sim_objs){
     for(auto& body1:sim_objs){   
+        if(body1.type == STAT_RECT){
+            continue;
+        }
         for(auto& body2:sim_objs){
             float dx = body2.xc-body1.xc;
             float dy = body2.yc-body1.yc;
@@ -9,12 +14,21 @@ void collision(std::vector<Sim_Body>& sim_objs){
             if(body1.ID == body2.ID){
                 continue;
             }
+            if(body2.type == STAT_RECT){
+                if(check_stat_rect_collision(body1,body2)){
+                    handle_static_collision(body1,body2);
+                    continue;
+                }else if(is_exempted(body1,body2)){
+                    remove_exemption(body1,body2);
+                    continue;
+                }
+            }
             if(is_exempted(body1,body2)){
                 if(d<=body1.r+body2.r){
                     continue;
                 }
             }
-            
+
             if(d<=body1.r+body2.r){
                 add_exemption(body1,body2);
                 float phi;
@@ -77,4 +91,20 @@ void update(std::vector<Sim_Body>& sim_objs,config& global_config){
             ptemp->update(sim_objs,global_config);
         }
     }
+}
+
+
+void handle_static_collision(Sim_Body& body,Sim_Body& stat){
+
+    //* Check out the video by Physics Galaxy on Oblique collision of ball on flat surface
+    float v = sqrt(SQR(body.vx)+SQR(body.vy));
+    //* Adjusting for negation of anlge initially
+    float ang = -stat.rot;
+    //* Assuming that the rectangle is horizontal,let theta be inital angle with rectangle
+    //* phi be angle after collision
+    float theta = M_PI_2- (atan(abs(body.vy/body.vx)) - ang);
+    float phi =M_PI_2 + atan( (1/COEFF_REST)*tan(theta) ) +ang;
+    body.vx = ((int)(v*cos(phi)*1000))/(float)1000;
+    body.vy = ((int)(v*sin(phi)*1000))/(float)1000;
+
 }

@@ -3,6 +3,7 @@
 #include<vector>
 #include "./sim_bodies.hpp"
 #include "./sim_bodies_generator.hpp"
+#include "./util.hpp"
 
 #define EXEMPT_COUNT 5
 #define ERR_MARGINE 0.001
@@ -12,3 +13,5 @@
 void collision(std::vector<Sim_Body>&);
 void calc_forces(std::vector<Sim_Body>&,config&);
 void update(std::vector<Sim_Body>&,config&);
+
+void handle_static_collision(Sim_Body& body,Sim_Body& stat);
