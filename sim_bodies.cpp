@@ -113,7 +113,8 @@ void Sphere::update(const std::vector<Sim_Body>&objs,const config& global){
     
     xc += vx*dt + 0.5*ax*(dt*dt);
     yc += vy*dt + 0.5*ay*(dt*dt);
-    zc += vz*dt + 0.5*az*(dt*dt);    
+    zc += vz*dt + 0.5*az*(dt*dt); 
+
     vx += ax*dt;
     vy += ay*dt;
     vz += az*dt;

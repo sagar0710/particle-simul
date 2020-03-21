@@ -1,3 +1,4 @@
+#include<iostream>
 #include "physics.hpp"
 #define SQR(x) ((x)*(x))
 #define COEFF_REST 1
@@ -57,17 +58,14 @@ void collision(std::vector<Sim_Body>& sim_objs){
                 term1 = (body2.vx*cos(theta2-phi)*(body2.mass-body1.mass)+2*body1.mass*v1*cos(theta1-phi))/(body1.mass+body2.mass);
                 v2x = term1*cos(phi)+v2*sin(theta2-phi)*cos(phi+M_PI_2);
                 v2y = term1*sin(phi)+v2*sin(theta2-phi)*sin(phi+M_PI_2);
-                float mi =sqrt(SQR(body1.vx*body1.mass+body2.vx*body2.mass)+SQR(body1.vx*body1.mass+body2.vx*body2.mass));
-                float ma =sqrt(SQR(v1x*body1.mass+v2x*body2.mass)+SQR(v1y*body1.mass+v2y*body2.mass));
-
-                if(mi != ma){
-                    float here =0;
-                }
 
                 body1.vx = ((int)v1x*PRECISION)/(float)PRECISION;
                 body1.vy = ((int)v1y*PRECISION)/(float)PRECISION;
-                body2.vx = ((int)v2x*PRECISION)/(float)PRECISION;
-                body2.vy = ((int)v2y*PRECISION)/(float)PRECISION;
+                if(body2.type != STAT_RECT){
+                    body2.vx = ((int)v2x*PRECISION)/(float)PRECISION;
+                    body2.vy = ((int)v2y*PRECISION)/(float)PRECISION;
+                }
+                
             }
         }
     }
@@ -75,6 +73,9 @@ void collision(std::vector<Sim_Body>& sim_objs){
 
 void calc_forces(std::vector<Sim_Body>& sim_objs,config& global_config){
     for(auto& body:sim_objs){
+        if(body.type == STAT_RECT){
+            continue;
+        }
         body.calc_force(sim_objs,global_config);
     }
 }
