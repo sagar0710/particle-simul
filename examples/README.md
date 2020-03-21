@@ -43,7 +43,6 @@ x,y,z co-ordinates of centre,height,width,mass(m), rotation(rot) with respect to
 
 #### almost_circle.sim
 
-<video autoplay>
+<video controls>
   <source src="./almost_circle.mp4" type="video/mp4">
-  <p>Your browser doesn't support HTML5 video.</p>
 </video>
