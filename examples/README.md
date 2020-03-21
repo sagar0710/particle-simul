@@ -2,8 +2,9 @@
 
 <p> The detailed syntax for each possible object can be found in the template.sim file</p>
 
-<p>
 #### Set parameters :
+
+<p>
 These can be used to set global parameter values.
 General Syntax is :
 SET param \<or\> SET param value.
@@ -43,6 +44,48 @@ x,y,z co-ordinates of centre,height,width,mass(m), rotation(rot) with respect to
 
 #### almost_circle.sim
 
-<video controls>
-  <source src="./almost_circle.mp4" type="video/mp4">
-</video>
+<img src="./almost_circle.gif"/>
+
+#### four_body_sim1.sim
+
+<img src="./four_body_sim1.gif"/>
+
+#### spiral1.sim
+
+<img src="./spiral1.gif"/>
+
+#### spiral2.sim
+
+<img src="./spiral2.gif"/>
+
+#### spiral3.sim
+
+<img src="./spiral3.gif"/>
+
+#### stat_incorrect.sim
+
+<img src="./stat_incorrect.gif"/>
+
+#### stat_with_G.sim
+
+<img src="./stat_with_G.gif"/>
+
+#### static_body_sim1.sim
+
+<img src="./static_body_sim1.gif"/>
+
+#### three_body_sim1.sim
+
+<img src="./three_body_sim1.gif"/>
+
+#### three_body_sim2.sim
+
+<img src="./three_body_sim2.gif"/>
+
+#### three_body_sim3.sim
+
+<img src="./three_body_sim3.gif"/>
+
+#### three_body_sim4.sim
+
+<img src="./three_body_sim4.gif"/>

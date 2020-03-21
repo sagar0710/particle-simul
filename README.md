@@ -14,7 +14,7 @@ This is a not-so-accurate physics simulator, which can simulate Universal gravit
 
 <p>This started as an attempt to use OpenGL while learning Computer Graphics in SE. Also really wanted to do this as a project related to physics for a long time. Even though it didn't turn out to be exactly what I had in ming, I had lot of fun doing this.<br>
 
-Even though this is not an accurate (ir for that matter, decently correct) simulator, I got to learn how to use Basic OpenGL, how game physics simulation and collision detection is done, and other things during this.</p>
+Even though this is not an accurate (for that matter, decently correct) simulator, I got to learn how to use Basic OpenGL, how game physics simulation and collision detection is done, and other things during this.</p>
 
 ## Compiling Information
 
