@@ -47,7 +47,7 @@ void draw_scene(void){
     glEnd();
     
     if(global_config.delay == 0 || global_config.counter == 0){
-        collision(sim_objs);
+        collision(sim_objs,global_config);
         calc_forces(sim_objs,global_config);
         update(sim_objs,global_config);
     }

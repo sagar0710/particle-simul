@@ -2,7 +2,6 @@
 #include<iostream>
 #include<math.h>
 #include<set>
-#include<chrono>
 #include "./sim_bodies.hpp"
 
 
@@ -17,9 +16,7 @@ int Sim_Body::num = 1;
 
 std::set<std::set<int>> exemptions;
 
-inline uint64_t get_time(){
-    return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
-}
+
 
 void add_exemption(const Sim_Body& b1,const Sim_Body& b2){
     std::set<int> l = {b1.ID,b2.ID};
@@ -98,14 +95,7 @@ void Sim_Body::calc_force(const std::vector<Sim_Body>& objs,const config& global
 
 void Sphere::update(const std::vector<Sim_Body>&objs,const config& global){
 
-    static uint64_t time = get_time();
-    static float dt = global.time_slice;
-    if(global.time_slice == 0){
-        uint64_t t = get_time();
-        dt = ((float)(t - time+1))/1000;
-        time = t;
-    }
-
+    float dt = global.time_slice;
     //* NOTE : Will need to be changed if 3D is implemented
     if(this->trace)
         trace_history.push_back(std::pair<float,float>(xc,yc));

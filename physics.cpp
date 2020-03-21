@@ -1,9 +1,13 @@
 #include<iostream>
+#include<chrono>
 #include "physics.hpp"
 #define SQR(x) ((x)*(x))
-#define COEFF_REST 1
 
-void collision(std::vector<Sim_Body>& sim_objs){
+inline uint64_t get_time(){
+    return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+}
+
+void collision(std::vector<Sim_Body>& sim_objs,const config& global){
     for(auto& body1:sim_objs){   
         if(body1.type == STAT_RECT){
             continue;
@@ -17,7 +21,8 @@ void collision(std::vector<Sim_Body>& sim_objs){
             }
             if(body2.type == STAT_RECT){
                 if(check_stat_rect_collision(body1,body2)){
-                    handle_static_collision(body1,body2);
+                    if(is_exempted(body1,body2))continue;
+                    handle_static_collision(body1,body2,global);
                     continue;
                 }else if(is_exempted(body1,body2)){
                     remove_exemption(body1,body2);
@@ -83,6 +88,13 @@ void calc_forces(std::vector<Sim_Body>& sim_objs,config& global_config){
 void update(std::vector<Sim_Body>& sim_objs,config& global_config){
     Sphere *stemp;
     Point *ptemp;
+
+    static uint64_t time = get_time();
+    if(global_config.time_slice == 0){
+        uint64_t t = get_time();
+        global_config.time_slice = ((float)(t - time+1))/1000;
+        time = t;
+    }
     for(auto& body:sim_objs){
         if(body.type==SPHERE){
             stemp = static_cast<Sphere*>(&body);
@@ -95,16 +107,19 @@ void update(std::vector<Sim_Body>& sim_objs,config& global_config){
 }
 
 
-void handle_static_collision(Sim_Body& body,Sim_Body& stat){
+void handle_static_collision(Sim_Body& body,Sim_Body& stat,const config& global){
 
     //* Check out the video by Physics Galaxy on Oblique collision of ball on flat surface
-    float v = sqrt(SQR(body.vx)+SQR(body.vy));
-    //* Adjusting for negation of anlge initially
-    float ang = -stat.rot;
+    
     //* Assuming that the rectangle is horizontal,let theta be inital angle with rectangle
     //* phi be angle after collision
-    float theta = M_PI_2- (atan(abs(body.vy/body.vx)) - ang);
-    float phi =M_PI_2 + atan( (1/COEFF_REST)*tan(theta) ) +ang;
+    std::pair tp = get_point_in_shifted_rotated(0,0,stat.rot,body.vx,body.vy);
+
+    float theta = M_PI_2 - atan(tp.second/tp.first);
+    float phi = M_PI_2 + atan((1/global.e)*tan(theta));
+
+    float u = sqrt(SQR(body.vx)+SQR(body.vy));
+    float v = u*sqrt(SQR(sin(theta))+SQR(global.e*cos(theta)));
     body.vx = ((int)(v*cos(phi)*1000))/(float)1000;
     body.vy = ((int)(v*sin(phi)*1000))/(float)1000;
 

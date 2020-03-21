@@ -10,8 +10,8 @@
 #define PRECISION 1000
 #define G_CONST 6.67e-11
 
-void collision(std::vector<Sim_Body>&);
+void collision(std::vector<Sim_Body>&,const config&);
 void calc_forces(std::vector<Sim_Body>&,config&);
 void update(std::vector<Sim_Body>&,config&);
 
-void handle_static_collision(Sim_Body& body,Sim_Body& stat);
+void handle_static_collision(Sim_Body& body,Sim_Body& stat,const config& global);

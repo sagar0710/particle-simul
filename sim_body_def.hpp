@@ -14,6 +14,7 @@ struct config{
     float time_slice = 0;
     int delay =0;
     int counter =0;
+    float e=1;
 };
 
 class Sim_Body{

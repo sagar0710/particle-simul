@@ -29,6 +29,9 @@ config generate_config(const std::vector<std::string>& tokens){
             }else if(!strcmp(temp.c_str(),"delay")){
                 ++itr;
                 ret.delay = atoi((*itr).c_str());
+            }else if(!strcmp(temp.c_str(),"e")){
+                ++itr;
+                ret.e = atof((*itr).c_str());
             }else{
                 std::cerr<<"Expected \'g\' ,\'G\' ,\'em\' .\'tslice\' or \'delay\' after SET.. got : \'"<<temp<<"\'\nExiting...";
                 exit(1);
@@ -43,7 +46,7 @@ void generate_sim_bodies(const std::vector<std::string>& tokens,std::vector<Sim_
     while(itr != tokens.end()){
         if(strcmp((*itr).c_str(),"SET") == 0 || strcmp((*itr).c_str(),"set") == 0){
             ++itr; // Goes to the SET arg
-            if(!strcmp((*itr).c_str(),"tslice") || !strcmp((*itr).c_str(),"delay")){
+            if(!strcmp((*itr).c_str(),"tslice") || !strcmp((*itr).c_str(),"delay") || !strcmp((*itr).c_str(),"e")){
                 ++itr;
             }
             ++itr; // Goes to next instruction token

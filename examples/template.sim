@@ -1,5 +1,9 @@
 SET g
+SET G
 SET em
+SET e val
+SET tslice val
+SET delay val
 
 ADD MBALL
 x y z r
