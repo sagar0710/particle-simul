@@ -1,5 +1,5 @@
 SET g
-
+SET tslice 0.005
 ADD MBALL
 0 200 0
 0 0 0 
