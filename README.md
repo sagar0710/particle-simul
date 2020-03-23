@@ -35,5 +35,7 @@ The Collision with static bodies can be incorrect sometimes,if not most of times
 <li>The Objects in Universal Gravitation usually precess even though there are no other objects influening their paths.</li>
 <li><b>There is a very good chance of finding bugs as one tries various combinations</b></li>
 </ul>
-## Warnings 
+
+## Warnings
+
 #### Please do not use this in any projects as this is quite inaccurate and buggy.
